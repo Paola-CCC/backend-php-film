@@ -1,0 +1,19 @@
+{
+    "name": "paolacyp/api",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Paola CYPRIEN",
+            "email": "paola.cyprien@hetic.net"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "firebase/php-jwt": "^6.10"
+    }
+}

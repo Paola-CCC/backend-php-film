@@ -1,0 +1,12 @@
+
+RewriteEngine On
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ index.php?url=$1 [L,QSA]
+RewriteRule ^(.*)/([0-9]+)/?$ index.php?url=$1&id=$2 [L,QSA]
+RewriteRule ^(.*)/id=([0-9]+)/?$ index.php?url=$1&id=$2 [L,QSA]
+RewriteRule ^(.*)/id=([0-9]+)/([a-zA-Z0-9]+)/?$ index.php?url=$1&id=$2&params=$3 [L,QSA]
