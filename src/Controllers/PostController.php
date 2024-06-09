@@ -148,10 +148,10 @@ class PostController
             $results = $this->postManager->findAll();
             return json_encode($this->getPostsWithComments($results));
 
-		} catch (PDOException $exception) {
+		} catch (PDOException $e) {
             return json_encode([
                 "status" => http_response_code(404),
-                "eroor-message" => $exception->getMessage()
+                "error-message" => $e->getMessage()
             ]);
 		}
     }
