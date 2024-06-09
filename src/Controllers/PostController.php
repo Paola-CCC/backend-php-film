@@ -20,7 +20,6 @@ class PostController
     public function __construct()
     {
         $this->postManager = new PostManager('posts');
-        $this->date = new FormatDateHelper();
     }
 
     /** renvoie les posts avec les likes, dislikes et les commentaires */
@@ -49,7 +48,7 @@ class PostController
 
                 foreach( $comments as $comment){
 
-                    $dateFormated = $this->date->getFrenchDate($comment["createdAt"]);
+                    $dateFormated = $this->getFrenchDate($comment["createdAt"]);
 
                     $filteredArr = array_filter($comment, function($key) {
                         return $key !== 'createdAt';
@@ -74,7 +73,7 @@ class PostController
                 "id" => $values["id"],
                 "title" => $values["title"],
                 "content" => $values["content"],
-                "createdAt" => $this->date->getFrenchDate($values["createdAt"]),
+                "createdAt" => $this->getFrenchDate($values["createdAt"]),
                 "author" => $values["author"],
                 "thumbnail" => $values["thumbnail"],
                 "picture_author_post" => $values["picture_avatar"],
@@ -161,5 +160,12 @@ class PostController
   
         http_response_code(200);
         return json_encode($this->postManager->deletePost($id));
+    }
+
+    public function getFrenchDate(string $dateToChange) 
+    {
+        $date = date_create($dateToChange);
+        $changeDate = date_format($date,"d/m/Y");
+        return $changeDate;
     }
 }
