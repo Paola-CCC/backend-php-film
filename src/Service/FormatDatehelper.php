@@ -1,12 +1,13 @@
 <?php 
 
-namespace App\Service;
+declare(strict_types=1);
 
+namespace App\Service;
 
 class FormatDateHelper 
 {
 
-    function getFrenchDate(string $dateToChange) 
+    public function getFrenchDate(string $dateToChange) 
     {
         $date = date_create($dateToChange);
         $changeDate = date_format($date,"d/m/Y");
