@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Routing;
 
+use App\Service\HttpRequest;
 use Exception;
 
 class Router
@@ -11,22 +12,20 @@ class Router
 
     public Routes $routesCollection ;
     public $routes ;
+    public $request = null ;
     
     public function __construct() 
     {
         $this->routesCollection = new Routes();
         $this->routes = $this->getAllRoutes() ;
+        $this->request = new HttpRequest() ;
+
     }
    
-    function run()
+    public function run()
     {
-        $urlID = '' ;
-        $output = $_SERVER['QUERY_STRING'];
-        parse_str($output, $query);
-
-        $method = $_SERVER['REQUEST_METHOD'];
-        $requestURL = $query['url'];
-        
+        $query = $this->request->getQueryStringParams();
+        $method = $this->request->getMethod();
 
         foreach ($this->routes as $route) {
 
@@ -34,7 +33,7 @@ class Router
                 continue;
             }
 
-            if ($requestURL === trim($route['path'], '/') &&  $method === $route['method']) {
+            if ($query['url'] === trim($route['path'], '/') &&  $method === $route['method']) {
 
                 if (is_callable($route['handler'])) {
                     return $route['handler']() ;
@@ -50,14 +49,12 @@ class Router
 
                     if (class_exists($fullClassName) && method_exists($fullClassName, $action)) {
 
-                        if(isset($query['id'])){
-                            $urlID = $query['id'] ;
-                        }
-
                         $class = new $fullClassName();
 
-                        if($urlID) {
-                            return $class->$action($urlID);
+                        if(isset($query['id'])) {
+                            return $class->$action($query['id']);
+                        } else if (isset($query['name'])) {
+                            return $class->$action((string) $query['name']);
                         } else {
                             return $class->$action();
                         }
@@ -71,6 +68,7 @@ class Router
         }
     }
 
+    /** affiche toutes les routes crées */
     public function getAllRoutes( )
     {  
         return $this->routesCollection->getRoutes() ;
@@ -89,19 +87,4 @@ class Router
             echo json_encode(['error' => 'An error occurred']);
         }
     }
-
-
-    public function useRegexToGetID($nameController, $idParams)
-    {
-
-        $IDElement = null;
-        $url = $_SERVER['REQUEST_URI'];
-        $patterns = '\/'. $nameController . '\/'. $idParams;
-        $pattern = '/' .  $patterns . '/';
-        if (preg_match($pattern, $url, $matches)) {
-            $IDElement = $matches[1]; 
-            return $IDElement;
-        };  
-    }
-
 }
