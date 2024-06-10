@@ -14,7 +14,6 @@ use PDOException;
 class PostController 
 {
     private $postManager;
-    private $date;
 
     public function __construct()
     {
