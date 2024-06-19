@@ -17,7 +17,6 @@ class Routes
         /** User */
         $this->post('/register',['user' => 'register']);
         $this->post('/login',['user' => 'login']);
-        
         $this->get('/user-all',['user' => 'all']);
         $this->get('/users-details',['user' => 'allDetails']);
         $this->put('/user-update',['user' => 'update']);
