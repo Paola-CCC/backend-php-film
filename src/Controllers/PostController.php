@@ -41,7 +41,13 @@ class PostController
             $likesPosts = $likes->findAllByPostId((int) $values["id"]);
             $dislikesPosts = $dislikes->findAllByPostId((int) $values["id"]);
             $decodeCategories = json_decode('[' . $values['categories'] . ']', true);
+            $decodeLikesGroup = json_decode('[' . $values['likesGroup'] . ']', true);
+            $decodeDislikesGroup = json_decode('[' . $values['dislikesGroup'] . ']', true);
+
             $categories = $decodeCategories[0]["id"] !== null ? $decodeCategories : [];
+            $likesGroup = $decodeLikesGroup[0]["id"] !== null ? $decodeLikesGroup : [];
+            $dislikesGroup = $decodeDislikesGroup[0]["id"] !== null ? $decodeDislikesGroup : [];
+
 
             if( count($comments) > 0){
 
@@ -79,7 +85,9 @@ class PostController
                 "comments" => $commentsList,
                 "likes" => $likesCounter,
                 "dislikes" => $dislikesCounter,
-                "categories" => $categories
+                "categories" => $categories,
+                "likesGroup" => $likesGroup,
+                "dislikesGroup" => $dislikesGroup
 
             ];
 
