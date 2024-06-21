@@ -61,7 +61,7 @@ class DislikesPostsManager
 			]);
 
 			if ($stmt) {
-				echo 'Dislike added successfully.';
+				return 'Dislike added successfully.';
 			}
 
 		} catch (\Throwable $e) {
@@ -82,7 +82,7 @@ class DislikesPostsManager
 			]);		
 			
 			if ($stmt) {
-				echo 'Dislike deleted successfully.';
+				return 'Dislike deleted successfully.';
 			}
 
 		} catch (\Throwable $e) {

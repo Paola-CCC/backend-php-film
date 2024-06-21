@@ -34,6 +34,7 @@ class PostController
         $dislikesCounter = 0;
 
         foreach($listPosts as $values ) {
+            
             $StepOne = [];
             $commentsList = [];
             $categories = [];
@@ -70,7 +71,7 @@ class PostController
                 $likesCounter += count($likesPosts);
             }
 
-            if( count($likesPosts) > 0){
+            if( count($dislikesPosts) > 0){
                 $dislikesCounter += count($dislikesPosts);
             }            
 

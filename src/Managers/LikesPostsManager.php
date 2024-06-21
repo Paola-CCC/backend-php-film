@@ -60,7 +60,7 @@ class LikesPostsManager
 			]);
 
 			if ($stmt) {
-				echo 'Like added successfully.';
+				return 'Like added successfully.';
 			}
 
 		} catch (\Throwable $e) {
@@ -80,7 +80,7 @@ class LikesPostsManager
 			]);		
 			
 			if ($stmt) {
-				echo 'Like deleted successfully.';
+				return 'Like deleted successfully.';
 			}
 
 		} catch (\Throwable $e) {
