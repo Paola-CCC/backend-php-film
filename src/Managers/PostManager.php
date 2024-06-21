@@ -33,12 +33,14 @@ class PostManager
         ) AS categories, 
 		GROUP_CONCAT(
 			JSON_OBJECT(
+				'id', lk_p.id,
 				'postId', lk_p.postId,
 				'userId', lk_p.userId
             )
         ) AS likesGroup,
 		GROUP_CONCAT(
 			JSON_OBJECT(
+				'id', dlk_p.id,
 				'postId', dlk_p.postId,
 				'userId', dlk_p.userId
             )
@@ -107,12 +109,14 @@ class PostManager
         ) AS categories,
 		GROUP_CONCAT(
 			JSON_OBJECT(
+				'id', lk_p.id,
 				'postId', lk_p.postId,
 				'userId', lk_p.userId
             )
         ) AS likesGroup,
 		GROUP_CONCAT(
 			JSON_OBJECT(
+				'id', dlk_p.id,
 				'postId', dlk_p.postId,
 				'userId', dlk_p.userId
             )

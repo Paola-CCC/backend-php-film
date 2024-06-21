@@ -59,7 +59,7 @@ class PostController
                         return $key !== 'createdAt';
                     }, ARRAY_FILTER_USE_KEY);
                     
-                    $filteredArr ["createdAt"] = $dateFormated;
+                    $filteredArr["createdAt"] = $dateFormated;
                     $StepOne[] = $filteredArr;
                 }
 
