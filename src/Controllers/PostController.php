@@ -33,6 +33,7 @@ class PostController
         $dislikesCounter = 0;
 
         foreach($listPosts as $values ) {
+            
             $StepOne = [];
             $commentsList = [];
             $categories = [];
@@ -40,7 +41,13 @@ class PostController
             $likesPosts = $likes->findAllByPostId((int) $values["id"]);
             $dislikesPosts = $dislikes->findAllByPostId((int) $values["id"]);
             $decodeCategories = json_decode('[' . $values['categories'] . ']', true);
+            $decodeLikesGroup = json_decode('[' . $values['likesGroup'] . ']', true);
+            $decodeDislikesGroup = json_decode('[' . $values['dislikesGroup'] . ']', true);
+
             $categories = $decodeCategories[0]["id"] !== null ? $decodeCategories : [];
+            $likesGroup = $decodeLikesGroup[0]["id"] !== null ? $decodeLikesGroup : [];
+            $dislikesGroup = $decodeDislikesGroup[0]["id"] !== null ? $decodeDislikesGroup : [];
+
 
             if( count($comments) > 0){
 
@@ -52,7 +59,7 @@ class PostController
                         return $key !== 'createdAt';
                     }, ARRAY_FILTER_USE_KEY);
                     
-                    $filteredArr ["createdAt"] = $dateFormated;
+                    $filteredArr["createdAt"] = $dateFormated;
                     $StepOne[] = $filteredArr;
                 }
 
@@ -63,7 +70,7 @@ class PostController
                 $likesCounter += count($likesPosts);
             }
 
-            if( count($likesPosts) > 0){
+            if( count($dislikesPosts) > 0){
                 $dislikesCounter += count($dislikesPosts);
             }            
 
@@ -78,7 +85,9 @@ class PostController
                 "comments" => $commentsList,
                 "likes" => $likesCounter,
                 "dislikes" => $dislikesCounter,
-                "categories" => $categories
+                "categories" => $categories,
+                "likesGroup" => $likesGroup,
+                "dislikesGroup" => $dislikesGroup
 
             ];
 

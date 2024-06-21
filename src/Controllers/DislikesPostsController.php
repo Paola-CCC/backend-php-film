@@ -8,11 +8,11 @@ use App\Managers\DislikesPostsManager;
 class DislikesPostsController 
 
 {
-    private $likesPostsManager;
+    private $dislikesPostsManager;
 
     public function __construct()
     {
-        $this->likesPostsManager = new DislikesPostsManager();
+        $this->dislikesPostsManager = new DislikesPostsManager();
     }
 
     public function new()
@@ -21,7 +21,7 @@ class DislikesPostsController
         $postId = (int) $data['postId'];
         $userId = (int) $data['userId'];
 
-        return json_encode($this->likesPostsManager->insertDislike([
+        return json_encode($this->dislikesPostsManager->insertDislike([
             "userId" => $userId,
             "postId" => $postId
         ]));
@@ -33,7 +33,7 @@ class DislikesPostsController
         $postId = (int) $data['postId'];
         $userId = (int) $data['userId'];
 
-        return json_encode($this->likesPostsManager->deleteDislike([
+        return json_encode($this->dislikesPostsManager->deleteDislike([
             "userId" => $userId,
             "postId" => $postId
         ]));

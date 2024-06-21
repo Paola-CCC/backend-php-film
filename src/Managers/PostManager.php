@@ -19,17 +19,6 @@ class PostManager
 		$this->_connexionBD = $instanceBD->getConnection();
 	}
 
-	//OK
-	// public function findAllPost() {
-	// 	$query = "SELECT p.id, p.title, p.content, p.createdAt, u.username
-	// 		FROM posts p
-	// 		LEFT JOIN users u 
-	// 		ON p.userId = u.id";
-	// 	$stmt = $this->_connexionBD->prepare($query);
-	// 	$stmt->execute();
-	// 	$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-	// 	return $row;
-	// }
 
 	/** renvoie des Posts associés avec des commentaires */
 	public function findAll()
@@ -41,11 +30,27 @@ class PostManager
 				'name', cat.name,
 				'slug', cat.slug
             )
-        ) AS categories
+        ) AS categories, 
+		GROUP_CONCAT(
+			JSON_OBJECT(
+				'id', lk_p.id,
+				'postId', lk_p.postId,
+				'userId', lk_p.userId
+            )
+        ) AS likesGroup,
+		GROUP_CONCAT(
+			JSON_OBJECT(
+				'id', dlk_p.id,
+				'postId', dlk_p.postId,
+				'userId', dlk_p.userId
+            )
+        ) AS dislikesGroup
 				FROM posts p
 				LEFT JOIN users u ON p.userId = u.id
 				LEFT JOIN posts_categories pc ON p.id = pc.postId
 				LEFT JOIN categories cat ON pc.categoryId = cat.id
+				LEFT JOIN likesPosts lk_p ON p.id = lk_p.postId
+				LEFT JOIN dislikesPosts dlk_p ON p.id = dlk_p.postId
 				GROUP BY p.id";
 		$stmt = $this->_connexionBD->prepare($query);
 		$stmt->execute();
@@ -96,16 +101,32 @@ class PostManager
 	public function findById(string $id)
 	{
 		$query = "SELECT p.id, p.title, p.content,p.thumbnail, p.createdAt, u.picture_avatar, u.username as author, GROUP_CONCAT(
-			JSON_OBJECT(
+		JSON_OBJECT(
 				'id', cat.id,
 				'name', cat.name,
 				'slug', cat.slug
             )
-        ) AS categories
+        ) AS categories,
+		GROUP_CONCAT(
+			JSON_OBJECT(
+				'id', lk_p.id,
+				'postId', lk_p.postId,
+				'userId', lk_p.userId
+            )
+        ) AS likesGroup,
+		GROUP_CONCAT(
+			JSON_OBJECT(
+				'id', dlk_p.id,
+				'postId', dlk_p.postId,
+				'userId', dlk_p.userId
+            )
+        ) AS dislikesGroup
 			FROM posts p
 			LEFT JOIN users u ON p.userId = u.id
 			LEFT JOIN posts_categories pc ON p.id = pc.postId
 			LEFT JOIN categories cat ON pc.categoryId = cat.id
+			LEFT JOIN likesPosts lk_p ON p.id = lk_p.postId
+			LEFT JOIN dislikesPosts dlk_p ON p.id = dlk_p.postId
 			WHERE p.id = :id
 			GROUP BY p.id";
 		$stmt = $this->_connexionBD->prepare($query);
@@ -119,7 +140,6 @@ class PostManager
 	//OK
 	public function deletePost(string $id)
 	{
-		// Suppression de l'utilisateur de la base de données
 		$query = "DELETE FROM posts WHERE id = :id";
 		$stmt = $this->_connexionBD->prepare($query);
 		$stmt->bindParam(":id", $id);
