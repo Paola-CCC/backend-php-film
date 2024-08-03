@@ -49,6 +49,9 @@ class Routes
         $this->get('/dislikes-posts-show/:id',['dislikesPosts' => 'show']);
         $this->delete('/dislikes-posts-remove',['dislikesPosts' => 'remove']);
 
+        /** Categories */
+        $this->get('/categories-all',['categories' => 'all']);
+
     }
     
     /**
