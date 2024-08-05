@@ -130,16 +130,13 @@ class PostController
     {
 
         $data = json_decode(file_get_contents('php://input'), true);
-        $title = $data['title'] ;
-        $content = $data['content'];
-        $userId = $data['userId'] ;
-        $$thumbnail = $data["$thumbnail"];
 
         $tabDatas = [
-            "title" => $title,
-            "content" =>  $content,
-            "userId" => $userId,
-            "thumbnail" => $thumbnail
+            "title" => $data['title'],
+            "content" =>  $data['content'],
+            "userId" => (int) $data['userId'],
+            "thumbnail" => $data["thumbnail"],
+            "categoryId" => (int) $data["categoryId"]
         ];
 
         http_response_code(200);

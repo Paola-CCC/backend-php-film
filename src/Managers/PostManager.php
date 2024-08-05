@@ -58,19 +58,48 @@ class PostManager
 		return $row ;
 	}
 
+	public function insertPostCategories(int $postId, int $categoryId)
+    {
+        try {
+
+            $query = "INSERT INTO posts_categories ( postId, categoryId) VALUES (:postId, :categoryId)";
+            $stmt = $this->_connexionBD->prepare($query);
+            $stmt->bindParam(":postId", $postId, PDO::PARAM_INT);
+            $stmt->bindParam(":categoryId", $categoryId, PDO::PARAM_INT);
+			
+            if ($stmt->execute()) {
+                return "success";
+            } else {
+                return "failed";
+            }
+
+        } catch (PDOException $exception) {
+
+            return $exception->getMessage();
+        }
+    }
+
+
 
 	//OK
-	public function insertPost(array $objet)
+	public function insertPost(array $object)
 	{
 		try {
 
 			$query = "INSERT INTO $this->_table (title, content,createdAt, userId , thumbnail) VALUES (:title, :content, current_timestamp(), :userId , :thumbnail)";
 			$stmt = $this->_connexionBD->prepare($query);
-			if ($stmt->execute($objet)) {
-				return "success";
+			$stmt->bindParam(":title", $object["title"], PDO::PARAM_STR);
+			$stmt->bindParam(":content", $object["content"], PDO::PARAM_STR);
+			$stmt->bindParam(":userId", $object["userId"], PDO::PARAM_INT);
+			$stmt->bindParam(":thumbnail", $object["thumbnail"], PDO::PARAM_STR);
+
+			if ($stmt->execute()) {
+				$lastInsert = $this->_connexionBD->lastInsertId();
+				return $this->insertPostCategories($lastInsert, $object["categoryId"]);
 			} else {
-				return "failed";
+				return "failed to create Post step one";
 			}
+
 		} catch (PDOException $exception) {
 
 			return $exception->getMessage();
