@@ -252,7 +252,7 @@ class PostManager
 		}
 	}
 
-	public function getTwelveFirstPost()
+	public function getEightFirstPost()
 	{
 		$query = "SELECT p.id, p.title, p.content,p.thumbnail, p.createdAt, u.picture_avatar, u.username as author, GROUP_CONCAT(
 		JSON_OBJECT(
@@ -283,7 +283,7 @@ class PostManager
 			LEFT JOIN dislikesPosts dlk_p ON p.id = dlk_p.postId
 			GROUP BY p.id
 			ORDER BY p.createdAt ASC
-			LIMIT 12";
+			LIMIT 8";
 
 		try {
 			$stmt = $this->_connexionBD->prepare($query);

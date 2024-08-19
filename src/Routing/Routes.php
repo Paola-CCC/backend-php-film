@@ -27,7 +27,7 @@ class Routes
         $this->post('/post-new',['post' => 'new']);
         $this->get('/posts-all',['post' => 'all']);
 
-        $this->get('/posts-front-list',['post' => 'showTwelveFirstPost']);
+        $this->get('/posts-front-list',['post' => 'showEightFirstPost']);
         $this->get('post-front-hero',['post' => 'showFrontPage']);
         $this->get('/posts-front-latest',['post' => 'showLatest']);
         

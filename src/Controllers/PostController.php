@@ -133,10 +133,10 @@ class PostController
 
 
 
-    public function showTwelveFirstPost()
+    public function showEightFirstPost()
     {
 
-        $results = $this->postManager->getTwelveFirstPost();
+        $results = $this->postManager->getEightFirstPost();
 
         if(gettype($results) === 'string'){
            return  $results;
