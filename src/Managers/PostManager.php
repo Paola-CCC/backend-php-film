@@ -3,6 +3,7 @@
 namespace App\Managers;
 
 use App\Managers\ConnexionPDO;
+use Exception;
 use PDO;
 use PDOException;
 
@@ -78,8 +79,6 @@ class PostManager
             return $exception->getMessage();
         }
     }
-
-
 
 	//OK
 	public function insertPost(array $object)
@@ -165,6 +164,136 @@ class PostManager
 		return $row;
 	}
 
+
+	public function getFrontPagePost()
+	{
+		$query = "SELECT p.id, p.title, p.content,p.thumbnail, p.createdAt, u.picture_avatar, u.username as author, GROUP_CONCAT(
+		JSON_OBJECT(
+				'id', cat.id,
+				'name', cat.name,
+				'slug', cat.slug
+            )
+        ) AS categories,
+		GROUP_CONCAT(
+			JSON_OBJECT(
+				'id', lk_p.id,
+				'postId', lk_p.postId,
+				'userId', lk_p.userId
+            )
+        ) AS likesGroup,
+		GROUP_CONCAT(
+			JSON_OBJECT(
+				'id', dlk_p.id,
+				'postId', dlk_p.postId,
+				'userId', dlk_p.userId
+            )
+        ) AS dislikesGroup
+			FROM posts p
+			LEFT JOIN users u ON p.userId = u.id
+			LEFT JOIN posts_categories pc ON p.id = pc.postId
+			LEFT JOIN categories cat ON pc.categoryId = cat.id
+			LEFT JOIN likesPosts lk_p ON p.id = lk_p.postId
+			LEFT JOIN dislikesPosts dlk_p ON p.id = dlk_p.postId
+			GROUP BY p.id
+			ORDER BY p.createdAt DESC 
+			LIMIT 1";
+
+		try {
+			$stmt = $this->_connexionBD->prepare($query);
+			$stmt->execute();
+			$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			return $row;
+		} catch (PDOException $e) {
+			return $e->getMessage(); 
+
+		}
+	}
+
+	public function getThreeLatestPost()
+	{
+		$query = "SELECT p.id, p.title, p.content,p.thumbnail, p.createdAt, u.picture_avatar, u.username as author, GROUP_CONCAT(
+		JSON_OBJECT(
+				'id', cat.id,
+				'name', cat.name,
+				'slug', cat.slug
+            )
+        ) AS categories,
+		GROUP_CONCAT(
+			JSON_OBJECT(
+				'id', lk_p.id,
+				'postId', lk_p.postId,
+				'userId', lk_p.userId
+            )
+        ) AS likesGroup,
+		GROUP_CONCAT(
+			JSON_OBJECT(
+				'id', dlk_p.id,
+				'postId', dlk_p.postId,
+				'userId', dlk_p.userId
+            )
+        ) AS dislikesGroup
+			FROM posts p
+			LEFT JOIN users u ON p.userId = u.id
+			LEFT JOIN posts_categories pc ON p.id = pc.postId
+			LEFT JOIN categories cat ON pc.categoryId = cat.id
+			LEFT JOIN likesPosts lk_p ON p.id = lk_p.postId
+			LEFT JOIN dislikesPosts dlk_p ON p.id = dlk_p.postId
+			GROUP BY p.id
+			ORDER BY p.createdAt DESC
+			LIMIT 3 OFFSET 1";
+
+		try {
+			$stmt = $this->_connexionBD->prepare($query);
+			$stmt->execute();
+			$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			return $row;
+		} catch (PDOException $e) {
+			return $e->getMessage(); 
+		}
+	}
+
+	public function getEightFirstPost()
+	{
+		$query = "SELECT p.id, p.title, p.content,p.thumbnail, p.createdAt, u.picture_avatar, u.username as author, GROUP_CONCAT(
+		JSON_OBJECT(
+				'id', cat.id,
+				'name', cat.name,
+				'slug', cat.slug
+            )
+        ) AS categories,
+		GROUP_CONCAT(
+			JSON_OBJECT(
+				'id', lk_p.id,
+				'postId', lk_p.postId,
+				'userId', lk_p.userId
+            )
+        ) AS likesGroup,
+		GROUP_CONCAT(
+			JSON_OBJECT(
+				'id', dlk_p.id,
+				'postId', dlk_p.postId,
+				'userId', dlk_p.userId
+            )
+        ) AS dislikesGroup
+			FROM posts p
+			LEFT JOIN users u ON p.userId = u.id
+			LEFT JOIN posts_categories pc ON p.id = pc.postId
+			LEFT JOIN categories cat ON pc.categoryId = cat.id
+			LEFT JOIN likesPosts lk_p ON p.id = lk_p.postId
+			LEFT JOIN dislikesPosts dlk_p ON p.id = dlk_p.postId
+			GROUP BY p.id
+			ORDER BY p.createdAt ASC
+			LIMIT 8";
+
+		try {
+			$stmt = $this->_connexionBD->prepare($query);
+			$stmt->execute();
+			$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			return $row;
+		} catch (PDOException $e) {
+			return $e->getMessage(); 
+		}
+	}
 
 	//OK
 	public function deletePost(string $id)

@@ -34,8 +34,6 @@ class PostController
 
         foreach($listPosts as $values ) {
             
-            $StepOne = [];
-            $commentsList = [];
             $categories = [];
             $comments = $commentManager->findAllByPostId($values["id"]);
             $likesPosts = $likes->findAllByPostId((int) $values["id"]);
@@ -48,24 +46,6 @@ class PostController
             $likesGroup = $decodeLikesGroup[0]["id"] !== null ? $decodeLikesGroup : [];
             $dislikesGroup = $decodeDislikesGroup[0]["id"] !== null ? $decodeDislikesGroup : [];
 
-
-            if( count($comments) > 0){
-
-                foreach( $comments as $comment){
-
-                    $dateFormated = $this->getFrenchDate($comment["createdAt"]);
-
-                    $filteredArr = array_filter($comment, function($key) {
-                        return $key !== 'createdAt';
-                    }, ARRAY_FILTER_USE_KEY);
-                    
-                    $filteredArr["createdAt"] = $dateFormated;
-                    $StepOne[] = $filteredArr;
-                }
-
-                $commentsList = [...$StepOne];
-            }
-
             if( count($likesPosts) > 0){
                 $likesCounter += count($likesPosts);
             }
@@ -77,12 +57,12 @@ class PostController
             $allPosts[] = [
                 "id" => $values["id"],
                 "title" => $values["title"],
-                "content" => $values["content"],
-                "createdAt" => $this->getFrenchDate($values["createdAt"]),
+                "content" =>  nl2br($values["content"]),
+                "createdAt" => $values["createdAt"],
                 "author" => $values["author"],
                 "thumbnail" => $values["thumbnail"],
                 "picture_author_post" => $values["picture_avatar"],
-                "comments" => $commentsList,
+                "comments" => $comments,
                 "likes" => $likesCounter,
                 "dislikes" => $dislikesCounter,
                 "categories" => $categories,
@@ -126,6 +106,45 @@ class PostController
         return json_encode($this->getPostsWithComments($results));
     }
 
+    public function showFrontPage()
+    {
+  
+        $results = $this->postManager->getFrontPagePost();
+        if(gettype($results) === 'string'){
+            return  $results;
+         } else if (gettype($results) === 'array') {
+             return json_encode($this->getPostsWithComments($results));
+         }
+
+    }
+
+
+    public function showLatest()
+    {
+
+        $results = $this->postManager->getThreeLatestPost();
+
+        if(gettype($results) === 'string'){
+           return  $results;
+        } else if (gettype($results) === 'array') {
+            return json_encode($this->getPostsWithComments($results));
+        }
+    }
+
+
+
+    public function showEightFirstPost()
+    {
+
+        $results = $this->postManager->getEightFirstPost();
+
+        if(gettype($results) === 'string'){
+           return  $results;
+        } else if (gettype($results) === 'array') {
+            return json_encode($this->getPostsWithComments($results));
+        }
+    }
+
     public function new()
     {
 
@@ -163,13 +182,7 @@ class PostController
     {
   
         http_response_code(200);
-        return json_encode($this->postManager->deletePost($id));
+        return $this->postManager->deletePost($id);
     }
 
-    public function getFrenchDate(string $dateToChange) 
-    {
-        $date = date_create($dateToChange);
-        $changeDate = date_format($date,"d/m/Y");
-        return $changeDate;
-    }
 }

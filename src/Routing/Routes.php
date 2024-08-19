@@ -26,6 +26,11 @@ class Routes
         /** Post */
         $this->post('/post-new',['post' => 'new']);
         $this->get('/posts-all',['post' => 'all']);
+
+        $this->get('/posts-front-list',['post' => 'showEightFirstPost']);
+        $this->get('post-front-hero',['post' => 'showFrontPage']);
+        $this->get('/posts-front-latest',['post' => 'showLatest']);
+        
         $this->put('/post-update',['post' => 'update']);
         $this->get('/post-show/:id',['post' => 'show']);
         $this->delete('/post-remove/:id',['post' => 'remove']);
