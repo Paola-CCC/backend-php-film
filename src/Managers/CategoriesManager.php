@@ -16,6 +16,7 @@ class CategoriesManager
 		$instanceBD = ConnexionPDO::getInstance();
 		$this->_connexionBD = $instanceBD->getConnection();
 	}
+    
     public function findAll()
     {
         try {
