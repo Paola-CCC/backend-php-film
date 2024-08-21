@@ -41,6 +41,7 @@ class ImagesController
                 //$file = 5f586bf96dcd38.73540086.jpg
 
                 $location = 'upload/' . $file;
+                $serverPath = $this->getFullURL() . '/' . $location;
                 move_uploaded_file($origine, $location);
             }
             else {
@@ -49,7 +50,7 @@ class ImagesController
 
             return json_encode($this->imagesManager->insertImage([
                 "name" => $fileName,
-                "path" => $location
+                "path" => $serverPath
             ]));
 
         

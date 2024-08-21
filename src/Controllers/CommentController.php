@@ -77,11 +77,7 @@ class CommentController
 
     public function remove(string $id)
     {
-        // return json_encode([
-        //     "status" => http_response_code(200),
-        //     "message" => $this->commentManager->deletecomment($id)
-        // ]);
-
+        
         http_response_code(200);
         return json_encode($this->commentManager->deletecomment($id));
 

@@ -23,10 +23,12 @@ class CommentsManager
 	public function findAllComment()
 	{
 
-		$query = "SELECT c.id, c.content, c.createdAt, c.postId, u.username ,u.picture_avatar
+		$query = "SELECT c.id, c.content, c.createdAt, c.postId, u.username , i.path AS picture_avatar
 			FROM comments c
 			LEFT JOIN users u 
-			ON c.userId = u.id";
+			ON c.userId = u.id
+			LEFT JOIN images i
+			ON i.id = u.picture_avatar";
 		$stmt = $this->_connexionBD->prepare($query);
 		$stmt->execute();
 		$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -75,10 +77,12 @@ class CommentsManager
 	//OK
 	public function findById(int $id)
 	{
-		$query = "SELECT c.id, c.content, c.createdAt, c.postId, u.picture_avatar, u.username as comment_author
+		$query = "SELECT c.id, c.content, c.createdAt, c.postId, i.path AS picture_avatar, u.username as comment_author
 			FROM comments c
 			LEFT JOIN users u 
 			ON c.userId = u.id
+			LEFT JOIN images i
+			ON i.id = u.picture_avatar
 			WHERE c.id = :id";
 		$stmt = $this->_connexionBD->prepare($query);
 		$stmt->bindParam(":id", $id, PDO::PARAM_INT);
@@ -89,10 +93,12 @@ class CommentsManager
 
 	public function findAllByPostId(int $id)
 	{
-		$query = "SELECT c.id, c.content, c.createdAt, c.postId, u.picture_avatar, u.username as comment_author
+		$query = "SELECT c.id, c.content, c.createdAt, c.postId, i.path AS picture_avatar,  u.username AS comment_author
 			FROM comments c
 			LEFT JOIN users u 
 			ON c.userId = u.id
+			LEFT JOIN images i
+			ON i.id = u.picture_avatar
 			WHERE c.postId = :id";
 		$stmt = $this->_connexionBD->prepare($query);
 		$stmt->bindParam(":id", $id, PDO::PARAM_INT);
@@ -108,6 +114,6 @@ class CommentsManager
 		$query = "DELETE FROM comments WHERE id = :id";
 		$stmt = $this->_connexionBD->prepare($query);
 		$stmt->bindParam(":id", $id);
-		$stmt->execute();
+		return $stmt->execute();
 	}
 }
