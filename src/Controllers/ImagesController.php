@@ -47,9 +47,6 @@ class ImagesController
                 echo "Mauvaise extension ou taille trop grande";
             }
 
-          
-            
-
             return json_encode($this->imagesManager->insertImage([
                 "name" => $fileName,
                 "path" => $location

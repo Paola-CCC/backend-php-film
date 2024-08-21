@@ -31,7 +31,10 @@ class ImagesManager
             ]);
 
 			if ($stmt) {
-				return 'Image added successfully.';
+				return [
+					"message" => "Image added successfully",
+					"imageId" => (int) $this->_connexionBD->lastInsertId()
+				];
 			}
 
 		} catch (PDOException $e) {
@@ -49,7 +52,7 @@ class ImagesManager
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
             
 		} catch (PDOException $e) {
-    		return "Error: " . $e->getMessage();
+    		return "Error GetAll: " . $e->getMessage();
 		}
 	}
 
@@ -66,7 +69,7 @@ class ImagesManager
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
             
 		} catch (PDOException $e) {
-    		return "Error: " . $e->getMessage();
+    		return "Error GetID: " . $e->getMessage();
 		}
 	}
 
