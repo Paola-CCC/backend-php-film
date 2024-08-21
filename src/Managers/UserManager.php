@@ -23,9 +23,10 @@ use PDO;
     public function findById(string $id ) 
     {
 
-        $query = "SELECT u.id, u.username, u.email, r.name as role_name , u.picture_avatar as profilePicture
+        $query = "SELECT u.id, u.username, u.email, r.name as role_name, i.path as profilePicture
         FROM users u
         LEFT JOIN role r ON u.role_id = r.id
+        LEFT JOIN images i ON u.picture_avatar = i.id
         WHERE u.id = :id";
         $stmt = $this->_connexionBD->prepare($query);
         $stmt->bindParam(":id", $id , PDO::PARAM_INT);
@@ -125,12 +126,13 @@ use PDO;
         // Creating new date format from that timestamp
         $new_date = date("d-m-Y", $timestamp);
 
-        $query = "INSERT INTO users (username, email, password, createdAt, role_id) VALUES (:username, :email, :password, :createdAt, :role_id)";
+        $query = "INSERT INTO users (username, email, password, createdAt, picture_avatar , role_id ) VALUES (:username, :email, :password, :createdAt, :picture_avatar, :role_id)";
         $stmt = $this->_connexionBD->prepare($query);
         $stmt->bindParam(":username", $data['username']);
         $stmt->bindParam(":email", $data['email']);
         $stmt->bindParam(":password", $password);
         $stmt->bindParam(":createdAt",$createdAt);
+        $stmt->bindParam(":picture_avatar", $data["picture_avatar"]);
         $stmt->bindParam(":role_id", $data['role']);
         if($stmt->execute()){ 
             return "success";
@@ -147,13 +149,14 @@ use PDO;
         // Formatage de la date en format SQL
         $createdAt = $now->format('Y-m-d H:i:s');
 
-        $query = "UPDATE users SET username = :username, email = :email, password = :password, createdAt = :createdAt, role_id = :role_id WHERE id = :id";
+        $query = "UPDATE users SET username = :username, email = :email, password = :password, createdAt = :createdAt , picture_avatar=:picture_avatar , role_id = :role_id WHERE id = :id";
         $stmt = $this->_connexionBD->prepare($query);
         $stmt->bindParam(":id", $data['id']);
         $stmt->bindParam(":username", $data['username']);
         $stmt->bindParam(":email", $data['email']);
         $stmt->bindParam(":password", $password);
         $stmt->bindParam(":createdAt",$createdAt );
+        $stmt->bindParam(":picture_avatar", $data["picture_avatar"]);
         $stmt->bindParam(":role_id", $data['role']);
 
         return $stmt->execute();

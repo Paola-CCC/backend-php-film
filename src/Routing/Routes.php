@@ -57,6 +57,12 @@ class Routes
         /** Categories */
         $this->get('/categories-all',['categories' => 'all']);
 
+        /** Images */
+        $this->post('/images-upload',['images' => 'new']);
+        $this->get('/images-all',['images' => 'all']);
+        $this->get('/image-show/:id',['images' => 'show']);
+
+
     }
     
     /**

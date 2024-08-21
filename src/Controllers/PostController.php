@@ -34,7 +34,7 @@ class PostController
 
         foreach($listPosts as $values ) {
             
-            $categories = [];
+            $categories = []; 
             $comments = $commentManager->findAllByPostId($values["id"]);
             $likesPosts = $likes->findAllByPostId((int) $values["id"]);
             $dislikesPosts = $dislikes->findAllByPostId((int) $values["id"]);

@@ -24,7 +24,7 @@ class PostManager
 	/** renvoie des Posts associés avec des commentaires */
 	public function findAll()
 	{
-		$query = "SELECT p.id, p.title, p.content,p.thumbnail, p.createdAt, u.picture_avatar, u.username as author, 
+		$query = "SELECT p.id, p.title, p.content, imgthumbnail.path AS thumbnail, p.createdAt, i.path AS picture_avatar, u.username as author, 
 		GROUP_CONCAT(
 			JSON_OBJECT(
 				'id', cat.id,
@@ -52,6 +52,8 @@ class PostManager
 				LEFT JOIN categories cat ON pc.categoryId = cat.id
 				LEFT JOIN likesPosts lk_p ON p.id = lk_p.postId
 				LEFT JOIN dislikesPosts dlk_p ON p.id = dlk_p.postId
+				LEFT JOIN images i ON i.id = u.picture_avatar
+				LEFT JOIN images imgthumbnail ON imgthumbnail.id = p.thumbnail
 				GROUP BY p.id";
 		$stmt = $this->_connexionBD->prepare($query);
 		$stmt->execute();
@@ -128,7 +130,7 @@ class PostManager
 	//OK
 	public function findById(string $id)
 	{
-		$query = "SELECT p.id, p.title, p.content,p.thumbnail, p.createdAt, u.picture_avatar, u.username as author, GROUP_CONCAT(
+		$query = "SELECT p.id, p.title, p.content, imgthumbnail.path AS thumbnail, p.createdAt, i.path AS picture_avatar, u.username as author, GROUP_CONCAT(
 		JSON_OBJECT(
 				'id', cat.id,
 				'name', cat.name,
@@ -155,6 +157,8 @@ class PostManager
 			LEFT JOIN categories cat ON pc.categoryId = cat.id
 			LEFT JOIN likesPosts lk_p ON p.id = lk_p.postId
 			LEFT JOIN dislikesPosts dlk_p ON p.id = dlk_p.postId
+			LEFT JOIN images i ON i.id = u.picture_avatar
+			LEFT JOIN images imgthumbnail ON imgthumbnail.id = p.thumbnail
 			WHERE p.id = :id
 			GROUP BY p.id";
 		$stmt = $this->_connexionBD->prepare($query);
@@ -167,7 +171,7 @@ class PostManager
 
 	public function getFrontPagePost()
 	{
-		$query = "SELECT p.id, p.title, p.content,p.thumbnail, p.createdAt, u.picture_avatar, u.username as author, GROUP_CONCAT(
+		$query = "SELECT p.id, p.title, p.content, imgthumbnail.path AS thumbnail, p.createdAt, i.path AS picture_avatar, u.username as author, GROUP_CONCAT(
 		JSON_OBJECT(
 				'id', cat.id,
 				'name', cat.name,
@@ -194,6 +198,8 @@ class PostManager
 			LEFT JOIN categories cat ON pc.categoryId = cat.id
 			LEFT JOIN likesPosts lk_p ON p.id = lk_p.postId
 			LEFT JOIN dislikesPosts dlk_p ON p.id = dlk_p.postId
+			LEFT JOIN images i ON i.id = u.picture_avatar
+			LEFT JOIN images imgthumbnail ON imgthumbnail.id = p.thumbnail
 			GROUP BY p.id
 			ORDER BY p.createdAt DESC 
 			LIMIT 1";
@@ -211,7 +217,7 @@ class PostManager
 
 	public function getThreeLatestPost()
 	{
-		$query = "SELECT p.id, p.title, p.content,p.thumbnail, p.createdAt, u.picture_avatar, u.username as author, GROUP_CONCAT(
+		$query = "SELECT p.id, p.title, p.content, imgthumbnail.path AS thumbnail, p.createdAt, i.path AS picture_avatar, u.username as author, GROUP_CONCAT(
 		JSON_OBJECT(
 				'id', cat.id,
 				'name', cat.name,
@@ -238,6 +244,8 @@ class PostManager
 			LEFT JOIN categories cat ON pc.categoryId = cat.id
 			LEFT JOIN likesPosts lk_p ON p.id = lk_p.postId
 			LEFT JOIN dislikesPosts dlk_p ON p.id = dlk_p.postId
+			LEFT JOIN images i ON i.id = u.picture_avatar
+			LEFT JOIN images imgthumbnail ON imgthumbnail.id = p.thumbnail
 			GROUP BY p.id
 			ORDER BY p.createdAt DESC
 			LIMIT 3 OFFSET 1";
@@ -254,7 +262,7 @@ class PostManager
 
 	public function getEightFirstPost()
 	{
-		$query = "SELECT p.id, p.title, p.content,p.thumbnail, p.createdAt, u.picture_avatar, u.username as author, GROUP_CONCAT(
+		$query = "SELECT p.id, p.title, p.content, imgthumbnail.path AS thumbnail, p.createdAt, i.path AS picture_avatar , u.username as author, GROUP_CONCAT(
 		JSON_OBJECT(
 				'id', cat.id,
 				'name', cat.name,
@@ -281,6 +289,8 @@ class PostManager
 			LEFT JOIN categories cat ON pc.categoryId = cat.id
 			LEFT JOIN likesPosts lk_p ON p.id = lk_p.postId
 			LEFT JOIN dislikesPosts dlk_p ON p.id = dlk_p.postId
+			LEFT JOIN images i ON i.id = u.picture_avatar
+			LEFT JOIN images imgthumbnail ON imgthumbnail.id = p.thumbnail
 			GROUP BY p.id
 			ORDER BY p.createdAt ASC
 			LIMIT 8";

@@ -51,7 +51,11 @@ class UserController
                     if (password_verify($password, $rowDBFetched['password'])) {
 
                         return json_encode([
-                            "user" => $rowDBFetched,
+                            "user" => [
+                                'id' => $rowDBFetched['id'],
+                                'username' => $rowDBFetched['username'],
+                                'email' => $rowDBFetched['email'] 
+                            ],
                             'jwt' => $this->addDatasToJWT([
                                 'id' => $rowDBFetched['id'],
                                 'username' => $rowDBFetched['username'],
@@ -81,11 +85,13 @@ class UserController
         $username = $data['username'] ;
         $email = $data['email'];
         $password = $data['password'] ;
-     
+        $pictureUser = $data['profilePicture'] ;
+
         $tabDatas = [
             "username" => $username,
             "email" =>  $email,
             "password" => $password,
+            "picture_avatar" => $pictureUser ?? '',
             "role" => 2
         ];
         
@@ -101,7 +107,11 @@ class UserController
                 $rowDBFetched = $this->userManager->findByEmail($email)->fetch(); 
 
                 return json_encode([
-                    "user" => $rowDBFetched,
+                    "user" => [
+                        'id' => $rowDBFetched['id'],
+                        'username' => $rowDBFetched['username'],
+                        'email' => $rowDBFetched['email'] 
+                    ],
                     "jwt" => $this->addDatasToJWT([
                         'id' => $rowDBFetched['id'],
                         'username' => $rowDBFetched['username'],
@@ -146,12 +156,14 @@ class UserController
         $username = $data['username'] ;
         $email = $data['email'];
         $password = $data['password'] ;
+        $pictureUser = $data['profilePicture'] ;
 
         $tabDatas = [
             "id" => $userId,
             "username" => $username,
             "email" =>  $email,
             "password" => $password,
+            "picture_avatar" => $pictureUser ?? '',
             "role" => '2',
             "createdAt" => $createdAt
         ];
@@ -162,9 +174,20 @@ class UserController
     //OK
     public function show(string $id)
     {
-        http_response_code(200);
-        return json_encode($this->userManager->findById($id));
+
+        $results =  $this->userManager->findById($id);
+
+        return json_encode( $results);
     }
+
+    public function getFullURL() 
+    {
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+        $host = $_SERVER['HTTP_HOST'];
+        $fullUrl = $protocol . $host ;
+        return $fullUrl;
+    }
+
 
     //OK
     public function all()
@@ -182,7 +205,7 @@ class UserController
     //OK
     public function remove(string $id)
     {
-        http_response_code(200);
-        return json_encode($this->userManager->delete($id));
+        // http_response_code(200);
+        // return json_encode($this->userManager->delete($id));
     }
 }
