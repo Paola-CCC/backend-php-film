@@ -120,7 +120,11 @@ class PostController
         }
 
         $results = $this->postManager->getPagination($currentPage,$itemsPerPage);
-        return json_encode($results);
+
+        return json_encode([
+			"results" => $this->getPostsWithComments($results['PostsDatas']),
+			"totalPosts" => $results['totalPosts'],
+		]);
     }
 
 
