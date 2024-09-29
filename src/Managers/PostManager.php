@@ -313,6 +313,33 @@ class PostManager
 		$stmt->bindParam(":id", $id);
 		$stmt->execute();
 	}
+
+	//OK
+	public function countPosts(){
+		$sql = "SELECT COUNT(*) AS nb_posts FROM `posts`";
+		$query = $this->_connexionBD->prepare($sql);
+		$query->execute();
+		$result = $query->fetch();
+		$nbPosts = (int) $result['nb_posts'];
+		return $nbPosts;;
+	}
+	
+	//OK
+	public function getPagination($currentPage, int $perPage) {
+
+		// On calcule le nombre de pages total
+		$pages = ceil($this->countPosts() / $perPage);
+		$firstOne = ($currentPage * $perPage) - $perPage;
+
+		$sql = 'SELECT * FROM `posts` ORDER BY `createdAt` DESC LIMIT :firstOne, :perPage';
+		$query = $this->_connexionBD->prepare($sql);
+		$query->bindValue(':firstOne', $firstOne, PDO::PARAM_INT);
+		$query->bindValue(':perPage', $perPage, PDO::PARAM_INT);
+		$query->execute();
+		$articles = $query->fetchAll(PDO::FETCH_ASSOC);
+		return $articles;
+
+	}
 }
 
 
