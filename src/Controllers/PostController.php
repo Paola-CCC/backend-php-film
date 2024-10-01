@@ -106,6 +106,30 @@ class PostController
         return json_encode($this->getPostsWithComments($results));
     }
 
+
+    public function showPage()
+    {
+
+        $currentPage = 1;
+        $itemsPerPage = 2;
+        if(isset($_GET['page']) && !empty($_GET['page'])){
+            $currentPage = (int) strip_tags($_GET['page']);
+            $itemsPerPage = (int) strip_tags($_GET['itemsPerPage']);
+        } else{
+            $currentPage = 1;
+        }
+
+        $results = $this->postManager->getPagination($currentPage,$itemsPerPage);
+
+        return json_encode([
+			"results" => $this->getPostsWithComments($results['PostsDatas']),
+			"pagesWithPosts" => $results['pagesWithPosts'],
+            "counterPosts" => $results['counterPosts']
+
+		]);
+    }
+
+
     public function showFrontPage()
     {
   

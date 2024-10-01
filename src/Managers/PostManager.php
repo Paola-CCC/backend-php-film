@@ -313,6 +313,71 @@ class PostManager
 		$stmt->bindParam(":id", $id);
 		$stmt->execute();
 	}
+
+	//OK
+	public function countPosts(){
+		$sql = "SELECT COUNT(*) AS nb_posts FROM `posts`";
+		$query = $this->_connexionBD->prepare($sql);
+		$query->execute();
+		$result = $query->fetch();
+		$nbPosts = (int) $result['nb_posts'];
+		return $nbPosts;;
+	}
+	
+	//OK
+	public function getPagination($currentPage, int $perPage) {
+
+		// On calcule le nombre de pages total
+		$pages = ceil($this->countPosts() / $perPage);
+		$firstOne = ($currentPage * $perPage) - $perPage;
+
+		$query ="SELECT p.id, p.title, p.content, imgthumbnail.path AS thumbnail, p.createdAt, i.path AS picture_avatar, u.username as author, 
+		GROUP_CONCAT(
+			JSON_OBJECT(
+				'id', cat.id,
+				'name', cat.name,
+				'slug', cat.slug
+            )
+        ) AS categories, 
+		GROUP_CONCAT(
+			JSON_OBJECT(
+				'id', lk_p.id,
+				'postId', lk_p.postId,
+				'userId', lk_p.userId
+            )
+        ) AS likesGroup,
+		GROUP_CONCAT(
+			JSON_OBJECT(
+				'id', dlk_p.id,
+				'postId', dlk_p.postId,
+				'userId', dlk_p.userId
+            )
+        ) AS dislikesGroup
+				FROM posts p
+				LEFT JOIN users u ON p.userId = u.id
+				LEFT JOIN posts_categories pc ON p.id = pc.postId
+				LEFT JOIN categories cat ON pc.categoryId = cat.id
+				LEFT JOIN likesPosts lk_p ON p.id = lk_p.postId
+				LEFT JOIN dislikesPosts dlk_p ON p.id = dlk_p.postId
+				LEFT JOIN images i ON i.id = u.picture_avatar
+				LEFT JOIN images imgthumbnail ON imgthumbnail.id = p.thumbnail
+				GROUP BY p.id
+				ORDER BY p.createdAt DESC LIMIT :firstOne, :perPage";
+
+		$query = $this->_connexionBD->prepare($query);
+		$query->bindValue(':firstOne', $firstOne, PDO::PARAM_INT);
+		$query->bindValue(':perPage', $perPage, PDO::PARAM_INT);
+		$query->execute();
+		$articles = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		$data = [
+			"PostsDatas" => $articles,
+			"pagesWithPosts" => $pages,
+			"counterPosts" => $this->countPosts()
+		];
+		return $data;
+
+	}
 }
 
 

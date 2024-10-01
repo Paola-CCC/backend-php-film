@@ -30,6 +30,7 @@ class Routes
         $this->get('/posts-front-list',['post' => 'showEightFirstPost']);
         $this->get('post-front-hero',['post' => 'showFrontPage']);
         $this->get('/posts-front-latest',['post' => 'showLatest']);
+        $this->get('/posts-pages',['post' => 'showPage']);
         
         $this->put('/post-update',['post' => 'update']);
         $this->get('/post-show/:id',['post' => 'show']);
