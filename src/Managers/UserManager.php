@@ -23,7 +23,7 @@ use PDO;
     public function findById(string $id ) 
     {
 
-        $query = "SELECT u.id, u.username, u.email, r.name as role_name, i.path as profilePicture
+        $query = "SELECT u.id, u.username, u.email, r.name as role_name, i.path as profilePicture , i.id as userImageId
         FROM users u
         LEFT JOIN role r ON u.role_id = r.id
         LEFT JOIN images i ON u.picture_avatar = i.id
@@ -159,6 +159,15 @@ use PDO;
         $stmt->bindParam(":picture_avatar", $data["picture_avatar"]);
         $stmt->bindParam(":role_id", $data['role']);
 
+        return $stmt->execute();
+    }
+
+    public function updateImage(array $data ) 
+    {
+        $query = "UPDATE users SET  picture_avatar = :picture_avatar WHERE id = :id";
+        $stmt = $this->_connexionBD->prepare($query);
+        $stmt->bindParam(":id", $data['id']);
+        $stmt->bindParam(":picture_avatar", $data["picture_avatar"]);
         return $stmt->execute();
     }
 
