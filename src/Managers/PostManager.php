@@ -372,7 +372,8 @@ class PostManager
 
 		$data = [
 			"PostsDatas" => $articles,
-			"totalPosts" => $pages,
+			"pagesWithPosts" => $pages,
+			"counterPosts" => $this->countPosts()
 		];
 		return $data;
 

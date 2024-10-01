@@ -123,7 +123,9 @@ class PostController
 
         return json_encode([
 			"results" => $this->getPostsWithComments($results['PostsDatas']),
-			"totalPosts" => $results['totalPosts'],
+			"pagesWithPosts" => $results['pagesWithPosts'],
+            "counterPosts" => $results['counterPosts']
+
 		]);
     }
 
