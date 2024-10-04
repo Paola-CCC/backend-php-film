@@ -99,10 +99,15 @@ class ImagesController
 
     public function show(string $id)
     {
-
         $results = $this->imagesManager->getById(((int) $id));
         return json_encode($this->imagesDataWithPath($results));
+    }
 
+    //OK
+    public function remove(string $id)
+    {
+        http_response_code(200);
+        return json_encode($this->imagesManager->delete((int)$id));
     }
 
 }

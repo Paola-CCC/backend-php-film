@@ -20,6 +20,7 @@ class Routes
         $this->get('/user-all',['user' => 'all']);
         $this->get('/users-details',['user' => 'allDetails']);
         $this->put('/user-update',['user' => 'update']);
+        $this->put('/user-update-image',['user' => 'updateImage']);
         $this->get('/user-show/:id',['user' => 'show']);
         $this->delete('/user-remove/:id',['user' => 'remove']);
 
@@ -62,6 +63,7 @@ class Routes
         $this->post('/images-upload',['images' => 'new']);
         $this->get('/images-all',['images' => 'all']);
         $this->get('/image-show/:id',['images' => 'show']);
+        $this->delete('/image-remove/:id',['images' => 'remove']);
 
 
     }

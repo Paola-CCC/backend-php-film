@@ -4,6 +4,7 @@
 namespace App\Managers;
 
 use App\Managers\ConnexionPDO;
+use DateTimeImmutable;
 use PDO;
 use PDOException;
 
@@ -61,12 +62,30 @@ class ImagesManager
 	{
 
 		try {
-            $query = "SELECT * FROM images i
-            WHERE i.id = :id";
+            $query = "SELECT * FROM images i WHERE i.id = :id";
 			$stmt = $this->_connexionBD->prepare($query);
             $stmt->bindParam(":id", $id, PDO::PARAM_INT);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+		} catch (PDOException $e) {
+    		return "Error GetID: " . $e->getMessage();
+		}
+	}
+
+	public function delete(int $id)
+	{
+
+		try {
+            $query = "DELETE FROM $this->_table WHERE id = :id";
+			$stmt = $this->_connexionBD->prepare($query);
+            $result = $stmt->execute([
+				"id" => $id
+			]);
+
+			if($result){
+				return "delete with sucess";
+			}
             
 		} catch (PDOException $e) {
     		return "Error GetID: " . $e->getMessage();

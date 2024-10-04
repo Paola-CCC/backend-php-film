@@ -170,6 +170,22 @@ class UserController
         http_response_code(200);
         return json_encode($this->userManager->update($tabDatas));
     }
+
+
+    public function updateImage()
+    {
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $userId = $data['userId'];
+        $pictureUserId = $data['profilePictureId'] ;
+
+        $tabDatas = [
+            "id" => $userId,
+            "picture_avatar" => $pictureUserId
+        ];
+        http_response_code(200);
+        return json_encode($this->userManager->updateImage($tabDatas));
+    }
     
     //OK
     public function show(string $id)
